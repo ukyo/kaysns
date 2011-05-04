@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>{{ thread.title }} - BBS Thread Page - app</title>
+</head>
+<body>
+<div><a href="/">TOP</a> | <a href="/bbs">BBS</a></div>
+<h1>{{ thread.title }}</h1>
+<div>
+  <dl class="info">
+    <dt>Auther</dt><dd>{{ thread.user.user_name }}</dd>
+    <dt>Created</dt><dd>{{ thread.created }}</dd>
+  </dl>
+  <div class="text">{{ thread.view_text()|safe }}</div>
+</div>
+{% for comment in thread.comments %}
+  <div>
+    <dl class="info">
+      <dt>Auther</dt><dd>{{ comment.user.user_name }}</dd>
+      <dt>Created</dt><dd>{{ comment.created }}</dd>
+    </dl>
+    <div class="text">{{ comment.view_text()|safe }}</div>
+{% endfor %}
+<div>
+  {{ form()|safe }}
+</div>
+</body>
+</html>

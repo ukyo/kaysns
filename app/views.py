@@ -25,9 +25,17 @@ from kay.auth.decorators import login_required
 
 """
 
-from kay.utils import render_to_response
-from app.models import MyUser
-from app.forms import UserForm
+from werkzeug import redirect
+
+from kay.utils import (
+    render_to_response, url_for
+    )
+from app.models import (
+    MyUser, BbsThread, BbsComment
+    )
+from app.forms import (
+    UserForm, BbsThreadForm, BbsCommentForm
+    )
 from kay.auth.decorators import login_required
 
 # Create your views here.
@@ -47,3 +55,26 @@ def manage_profile(request):
             data['validate'] = u'失敗しました。'
     data['form'] = form.as_widget()
     return render_to_response('app/manage-profile.html', data)
+
+@login_required
+def bbs(request):
+    form = BbsThreadForm()
+    threads = BbsThread.all().order('-created')
+    if request.method == 'POST':
+        if form.validate(request.form):
+            form.save()
+            return redirect(url_for('app/bbs/index'))
+    return render_to_response('app/bbs/index.html', {'form': form.as_widget(),
+                                                     'threads': threads})
+                                                     
+@login_required
+def bbs_thread(request, id):
+    form = BbsCommentForm()
+    thread = BbsThread.get_by_id(id)
+    if request.method == 'POST':
+        if form.validate(request.form):
+            form.save(thread=thread)
+            thread.put()
+            return redirect('/bbs/%d' % id)
+    return render_to_response('app/bbs/thread.html', {'form': form.as_widget(),
+                                                      'thread': thread})

@@ -26,6 +26,8 @@ view_groups = [
   ViewGroup(
     Rule('/', endpoint='index', view='app.views.index'),
     Rule('/manage-profile', endpoint='manage-profile', view='app.views.manage_profile'),
+    Rule('/bbs', endpoint='bbs/index', view='app.views.bbs'),
+    Rule('/bbs/<int:id>', endpoint='bbs/thread', view='app.views.bbs_thread'),
   )
 ]
 
