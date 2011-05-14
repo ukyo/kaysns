@@ -1,0 +1,26 @@
+{% extends "app/base.html" %}
+{% block title %}{{ user_name }} - Blog Page - app{% endblock %}
+{% block content %}
+  <h1><a href="/{{ user_name }}/blog">{{ user_name }} - Blog Page</a></h1>
+  <div id="blog">
+    {% for entry in entries.object_list %}
+      <div class="blog-entry">
+        <div class="blog-title">
+          <a href="/{{ user_name }}/blog/{{ entry.key().id() }}">{{ entry.title }}</a>
+        </div>
+        <div class="blog-created">{{ entry.created }}</div>
+        <div class="blog-text">{{ entry.view_text()|safe }}</div>
+        <div class="blog-tags">
+          Tags:
+          {% for tag in entry.tags %}
+            <a href="/tag/{{ tag }}">{{ tag }}</a>
+          {% endfor %}
+        </div>
+        <div class="blog-comment">
+          <a href="/{{ user_name }}/blog/{{ entry.key().id() }}#comment">Comment({{ entry.comments.count() }})</a>
+        </div>
+      </div>
+    {% endfor %}
+    {{ paginator|safe }}
+  </div>
+{% endblock %}

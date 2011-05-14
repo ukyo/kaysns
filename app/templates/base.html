@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+{% from "auth/macros.html" import render_loginbox with context %}
+
+<html>
+  <head>
+    {% block head %}
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  	  <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% if request.user.is_anonymous() %}
+      {{ render_loginbox() }}
+    {% else %}
+      <div id="menu">
+        {% block menu %}
+          <ul>
+            <li><a href="/">My Page</a>
+            <li><a href="/bbs">BBS</a>
+            <li>Blog
+              <ul>
+                <li><a href="/{{ request.user }}/blog">My Blog</a>
+                <li><a href="/blog/manage">Manage Entries</a>
+                <li><a href="/blog/create">Create a Entry</a>
+              </ul>
+            <li><a href="{{ create_logout_url() }}">logout</a>
+          </ul>
+        {% endblock %}
+      </div>
+      <div id="content">
+        {% block content %}
+        
+        {% endblock %}
+      </div>
+    {% endif %}
+  </body>
+</html>

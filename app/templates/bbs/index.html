@@ -1,18 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>BBS Page - app</title>
-</head>
-<body>
-<div><a href="/">TOP</a></div>
-<div>
-  {{ form()|safe }}
-</div>
-<ul>
+{% extends "app/base.html" %}
+{% block title %}BBS Page - app{% endblock %}
+{% block content %}
+  <div>
+    {{ form()|safe }}
+  </div>
   <table>
     <tr><th>Auther</th><th>Title</th><th>Updated</th><th>Created</th></tr>
-    {% for thread in threads %}
+    {% for thread in threads.object_list %}
       <tr>
         <td>{{ thread.user.user_name }}</td>
         <td><a href="/bbs/{{ thread.key().id() }}">{{ thread.title }}</a></td>
@@ -21,6 +15,5 @@
       </tr>
     {% endfor %}
   </table>
-</ul>
-</body>
-</html>
+  {{ paginator|safe }}
+{% endblock %}

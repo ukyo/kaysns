@@ -1,0 +1,18 @@
+{% extends "app/base.html" %}
+{% block title %}Manage Blog Entries - app{% endblock %}
+{% block content %}
+  <h1>Manage Blog Entries</h1>
+  <div>
+    <p>List of Entries</p>
+    <div>
+      {% for entry in entries.object_list %}
+        <ul>
+          <li><a href="/{{ request.user.user_name }}/blog/{{ entry.key().id() }}">{{ entry.title }}</a>
+          <li><a href="/blog/update/{{ entry.key().id() }}">Update</a>
+          <li><a href="/blog/delete/check/{{ entry.key().id() }}">Delete</a>
+        </ul>
+      {% endfor %}
+    </div>
+    {{ paginator|safe }}
+  </div>
+{% endblock %}

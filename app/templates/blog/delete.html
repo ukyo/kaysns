@@ -1,0 +1,20 @@
+{% extends "app/base.html" %}
+{% block title %}Delete a Blog Entry - app{% endblock %}
+{% block content %}
+  <h1>Delete a Blog Entry</h1>
+  <div id="check-delete">
+    <dl>
+      <dt>Title
+      <dd>{{ entry.title }}
+      <dt>Text
+      <dd>{{ entry.text|safe }}
+    </dl>
+  </div>
+  <div>
+  <p>Do you delete this Entry ?</p>
+    <ul>
+      <li><a href="/blog/delete/{{ entry.key().id() }}">Yes</a>
+      <li><a href="/blog/manage">No</a>
+    </ul>
+  </div>
+{% endblock %}

@@ -28,6 +28,13 @@ view_groups = [
     Rule('/manage-profile', endpoint='manage-profile', view='app.views.manage_profile'),
     Rule('/bbs', endpoint='bbs/index', view='app.views.bbs'),
     Rule('/bbs/<int:id>', endpoint='bbs/thread', view='app.views.bbs_thread'),
+    Rule('/blog/manage', endpoint='blog/manage', view='app.views.blog_manage'),
+    Rule('/blog/create', endpoint='blog/create', view='app.views.blog_create_entry'),
+    Rule('/blog/update/<int:id>', endpoint='blog/update', view='app.views.blog_update_entry'),
+    Rule('/blog/delete/check/<int:id>', endpoint='blog/delete/check', view='app.views.blog_check_delete_entry'),
+    Rule('/blog/delete/<int:id>', endpoint='blog/delete', view='app.views.blog_delete_entry'),
+    Rule('/<user_name>/blog', endpoint='blog/index', view='app.views.blog'),
+    Rule('/<user_name>/blog/<int:id>', endpoint='blog/entry', view='app.views.blog_entry'),
   )
 ]
 

@@ -1,18 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Top Page - app</title>
-</head>
-<body>
-{% from "auth/macros.html" import render_loginbox with context %}
-
-{% if request.user.is_anonymous() %}
-  {{ render_loginbox() }}
-{% else %}
-  Hello {{ request.user }}! <a href="{{ create_logout_url() }}">logout</a>
-  <div><a href="/manage-profile">manage profile</a></div>
-  <div><a href="/bbs">bbs</a></div>
-{% endif %}
-</body>
-</html>
+{% extends "app/base.html" %}
+{% block title %}Top Page - app{% endblock %}
+{% block content %}Hello {{ request.user }}!{% endblock %}

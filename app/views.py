@@ -25,25 +25,48 @@ from kay.auth.decorators import login_required
 
 """
 
+from google.appengine.ext import db
+
 from werkzeug import redirect
 
 from kay.utils import (
-    render_to_response, url_for
+    render_to_response, url_for, render_to_string
     )
 from app.models import (
-    MyUser, BbsThread, BbsComment
+    MyUser, BbsThread, BbsComment, BlogEntry
     )
 from app.forms import (
-    UserForm, BbsThreadForm, BbsCommentForm
+    UserForm, BbsThreadForm, BbsCommentForm, BlogEntryForm,
+    BlogCommentForm,
     )
 from kay.auth.decorators import login_required
+from kay.utils.paginator import Paginator, InvalidPage, EmptyPage
 
 # Create your views here.
 
+def create_paginator_page(request, query, length=10):
+    #show http://kay-docs-jp.shehas.net/pagination.html
+    paginator = Paginator(query, length)
+    
+    try:
+        page = int(request.args.get('page', '1'))
+    except ValueError:
+        page = 1
+    
+    try:
+        return paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        return paginator.page(paginator.num_page)
+    
+    
+def render_paginator(paginator_page):
+    return render_to_string('app/paginator.html', {'page': paginator_page})
+    
+    
 def index(request):
-    return render_to_response('app/index.html', {'request': request})
+    return render_to_response('app/index.html')
 
-@login_required
+
 def manage_profile(request):
     form = UserForm(request.user)
     data = {}
@@ -56,18 +79,20 @@ def manage_profile(request):
     data['form'] = form.as_widget()
     return render_to_response('app/manage-profile.html', data)
 
-@login_required
+
 def bbs(request):
     form = BbsThreadForm()
-    threads = BbsThread.all().order('-created')
+    threads_all = BbsThread.all().order('-created')
+    threads = create_paginator_page(request, threads_all)
     if request.method == 'POST':
         if form.validate(request.form):
             form.save()
             return redirect(url_for('app/bbs/index'))
     return render_to_response('app/bbs/index.html', {'form': form.as_widget(),
-                                                     'threads': threads})
+                                                     'threads': threads,
+                                                     'paginator': render_paginator(threads)})
                                                      
-@login_required
+                                                     
 def bbs_thread(request, id):
     form = BbsCommentForm()
     thread = BbsThread.get_by_id(id)
@@ -78,3 +103,61 @@ def bbs_thread(request, id):
             return redirect('/bbs/%d' % id)
     return render_to_response('app/bbs/thread.html', {'form': form.as_widget(),
                                                       'thread': thread})
+                                                      
+                                                      
+def blog(request, user_name):
+    user = MyUser.all().filter('user_name', user_name).get()
+    query = BlogEntry.all().filter('user', user).order('-created')
+    entries = create_paginator_page(request, query)
+    return render_to_response('app/blog/index.html', {'user_name': user_name,
+                                                      'entries': entries,
+                                                      'paginator': render_paginator(entries)})
+
+
+def blog_entry(request, user_name, id):
+    form = BlogCommentForm()
+    entry = BlogEntry.get_by_id(id)
+    if request.method == 'POST':
+        if form.validate(request.form):
+            form.save(entry=entry)
+            return redirect('/%s/blog/%d' % (user_name, id))
+    return render_to_response('app/blog/entry.html', {'user_name': user_name,
+                                                      'entry': entry,
+                                                      'form': form.as_widget()})
+
+
+def blog_manage(request):
+    query = BlogEntry.all().filter('user', request.user).order('-created')
+    entries = create_paginator_page(request, query)
+    return render_to_response('app/blog/manage.html', {'entries': entries,
+                                                       'paginator': render_paginator(entries)})
+
+
+def blog_create_entry_base(request, form, template):
+    if request.method == 'POST':
+        if form.validate(request.form):
+            form.save()
+            return redirect(url_for('app/blog/manage'))
+    return render_to_response(template, {'form': form.as_widget()})
+
+
+def blog_create_entry(request):
+    return blog_create_entry_base(request, BlogEntryForm(), 'app/blog/create.html')
+
+
+def blog_update_entry(request, id):
+    return blog_create_entry_base(request, BlogEntryForm(BlogEntry.get_by_id(id)), 'app/blog/update.html')
+    
+    
+def blog_check_delete_entry(request, id):
+    return render_to_response('app/blog/delete.html', {'entry': BlogEntry.get_by_id(id)})
+    
+    
+def blog_delete_entry(request, id):
+    entry = BlogEntry.get_by_id(id)
+    db.delete(entry.comments)
+    db.delete(entry)
+    return redirect(url_for('app/blog/manage'))
+    
+    
+    

@@ -1,18 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Profile Page - app</title>
-</head>
-<body>
-<div><a href="/">TOP</a></div>
-<div>
-  {{ form()|safe }}
-</div>
-{% if validate %}
+{% extends "app/base.html" %}
+{% block title %}Profile Page - app{% endblock %}
+{% block content %}
   <div>
-    {{ validate }}
+    {{ form()|safe }}
   </div>
-{% endif %}
-</body>
-</html>
+  {% if validate %}
+    <div>
+      {{ validate }}
+    </div>
+  {% endif %}
+{% endblock %}
