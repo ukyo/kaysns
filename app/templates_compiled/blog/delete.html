@@ -1,0 +1,29 @@
+from __future__ import division
+from jinja2.runtime import LoopContext, TemplateReference, Macro, Markup, TemplateRuntimeError, missing, concat, escape, markup_join, unicode_join, to_string, TemplateNotFound
+name = '\\blog\\delete.html'
+
+def root(context, environment=environment):
+    parent_template = None
+    if 0: yield None
+    parent_template = environment.get_template('app/base.html', '\\blog\\delete.html')
+    for name, parent_block in parent_template.blocks.iteritems():
+        context.blocks.setdefault(name, []).append(parent_block)
+    for event in parent_template.root_render_func(context):
+        yield event
+
+def block_content(context, environment=environment):
+    l_entry = context.resolve('entry')
+    t_1 = environment.filters['safe']
+    if 0: yield None
+    yield u'\n  <h1>Delete a Blog Entry</h1>\n  <div id="check-delete">\n    <dl>\n      <dt>Title\n      <dd>%s\n      <dt>Text\n      <dd>%s\n    </dl>\n  </div>\n  <div>\n  <p>Do you delete this Entry ?</p>\n    <ul>\n      <li><a href="/blog/delete/%s">Yes</a>\n      <li><a href="/blog/manage">No</a>\n    </ul>\n  </div>\n' % (
+        escape(environment.getattr(l_entry, 'title')), 
+        escape(t_1(environment.getattr(l_entry, 'text'))), 
+        escape(context.call(environment.getattr(context.call(environment.getattr(l_entry, 'key')), 'id'))), 
+    )
+
+def block_title(context, environment=environment):
+    if 0: yield None
+    yield u'Delete a Blog Entry - app'
+
+blocks = {'content': block_content, 'title': block_title}
+debug_info = '1=8&3=14&8=19&10=20&16=21&2=24'

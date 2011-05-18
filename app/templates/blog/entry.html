@@ -3,7 +3,7 @@
 {% block content %}
   <h1><a href="/{{ user_name }}/blog">{{ user_name }} - Blog Page</a></h1>
   <div class="blog-title">{{ entry.title }}</div>
-  <div class="blog-created">{{ entry.created }}</div>
+  <div class="blog-created">{{ entry.view_datetime('created') }}</div>
   <div class="blog-text">{{ entry.view_text()|safe }}</div>
   <div class="blog-tags">
     Tags:
@@ -19,7 +19,7 @@
     {% for comment in entry.comments %}
       <div class="blog-entry-comment">
         <div class="blog-entry-comment-title">{{ comment.title }}</div>
-        <div class="blog-entry-comment-created">{{ comment.created }}</div>
+        <div class="blog-entry-comment-created">{{ comment.view_datetime('created') }}</div>
         <div class="blog-entry-comment-text">{{ comment.view_text()|safe }}</div>
         <div class="blog-entry-comment-author">by {{ comment.user }}</div>
       </div>

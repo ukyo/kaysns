@@ -8,7 +8,7 @@
         <div class="blog-title">
           <a href="/{{ user_name }}/blog/{{ entry.key().id() }}">{{ entry.title }}</a>
         </div>
-        <div class="blog-created">{{ entry.created }}</div>
+        <div class="blog-created">{{ entry.view_datetime('created') }}</div>
         <div class="blog-text">{{ entry.view_text()|safe }}</div>
         <div class="blog-tags">
           Tags:

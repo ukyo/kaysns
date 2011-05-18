@@ -1,0 +1,32 @@
+from __future__ import division
+from jinja2.runtime import LoopContext, TemplateReference, Macro, Markup, TemplateRuntimeError, missing, concat, escape, markup_join, unicode_join, to_string, TemplateNotFound
+name = '\\paginator.html'
+
+def root(context, environment=environment):
+    l_page = context.resolve('page')
+    if 0: yield None
+    yield u'<div class="pagination">\n  '
+    if environment.getattr(l_page, 'has_previous'):
+        if 0: yield None
+        yield u'\n    <a href="?page=%s">Previous</a>\n  ' % (
+            escape(environment.getattr(l_page, 'previous_page_number')), 
+        )
+    else:
+        if 0: yield None
+        yield u'\n    <span>Previous</span>\n  '
+    yield u'\n  <span>%s / %s</span>\n  ' % (
+        escape(environment.getattr(l_page, 'number')), 
+        escape(environment.getattr(environment.getattr(l_page, 'paginator'), 'num_pages')), 
+    )
+    if environment.getattr(l_page, 'has_next'):
+        if 0: yield None
+        yield u'\n    <a href="?page=%s">Next</a>\n  ' % (
+            escape(environment.getattr(l_page, 'next_page_number')), 
+        )
+    else:
+        if 0: yield None
+        yield u'\n    <span>Next</span>\n  '
+    yield u'\n</div>'
+
+blocks = {}
+debug_info = '1=8&2=9&3=12&4=16&6=17&7=18&8=21&9=24&10=28&12=29'

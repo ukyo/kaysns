@@ -2,7 +2,8 @@
 
 from kay.utils.forms.modelform import ModelForm
 from app.models import (
-    MyUser, BbsThread, BbsComment, BlogEntry, BlogComment
+    MyUser, BbsThread, BbsComment,
+    BlogEntry, BlogComment, Image
 )
 
 class UserForm(ModelForm):
@@ -33,3 +34,9 @@ class BlogCommentForm(ModelForm):
     class Meta:
         model = BlogComment
         exclude = ('user', 'entry')
+        
+        
+class ImageForm(ModelForm):
+    class Meta:
+        model = Image
+        exclude = ('user', )

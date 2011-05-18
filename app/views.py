@@ -26,21 +26,23 @@ from kay.auth.decorators import login_required
 """
 
 from google.appengine.ext import db
+from google.appengine.api import images
 
-from werkzeug import redirect
+from werkzeug import redirect, Response
 
 from kay.utils import (
     render_to_response, url_for, render_to_string
     )
 from app.models import (
-    MyUser, BbsThread, BbsComment, BlogEntry
+    MyUser, BbsThread, BbsComment, BlogEntry, Image
     )
 from app.forms import (
     UserForm, BbsThreadForm, BbsCommentForm, BlogEntryForm,
-    BlogCommentForm,
+    BlogCommentForm, ImageForm
     )
-from kay.auth.decorators import login_required
+from kay.auth.decorators import login_required, admin_required
 from kay.utils.paginator import Paginator, InvalidPage, EmptyPage
+from kay.auth import create_new_user
 
 # Create your views here.
 
@@ -160,4 +162,34 @@ def blog_delete_entry(request, id):
     return redirect(url_for('app/blog/manage'))
     
     
+def setting_image(request):
+    form = ImageForm()
+    if request.method == 'POST':
+        if form.validate(request.form, request.files):
+            image = Image.all().filter('user', request.user).get()
+            if image:
+                icon = request.files['icon'] or image.icon
+                background_image = request.files['background_image'] or image.background_image
+            else:
+                icon = None
+                background_image = None
+            form.save(icon=icon, background_image=background_image)
+            return redirect(url_for('app/index'))
+    return render_to_response('app/setting/image.html', {'form': form.as_widget()})
     
+    
+def icon(request, user_name, width, height):
+    user = MyUser.all().filter('user_name', user_name).get()
+    icon = Image.all().filter('user', user).get().icon
+    return Response(mimetype='image/png', response=images.resize(icon, width, height))
+    
+    
+def background_image(request, user_name):
+    user = MyUser.all().filter('user_name', user_name).get()
+    background_image = Image.all().filter('user', user).get().background_image
+    return Response(mimetype='image/png', response=images.rotate(background_image, 0))
+    
+@admin_required
+def admin_create_user(request, user_name, password, is_admin):
+    create_new_user(user_name, password, is_admin=bool(is_admin))
+    return Response(response='ok')

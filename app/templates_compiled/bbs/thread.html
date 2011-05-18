@@ -1,0 +1,45 @@
+from __future__ import division
+from jinja2.runtime import LoopContext, TemplateReference, Macro, Markup, TemplateRuntimeError, missing, concat, escape, markup_join, unicode_join, to_string, TemplateNotFound
+name = '\\bbs\\thread.html'
+
+def root(context, environment=environment):
+    parent_template = None
+    if 0: yield None
+    parent_template = environment.get_template('app/base.html', '\\bbs\\thread.html')
+    for name, parent_block in parent_template.blocks.iteritems():
+        context.blocks.setdefault(name, []).append(parent_block)
+    for event in parent_template.root_render_func(context):
+        yield event
+
+def block_content(context, environment=environment):
+    l_form = context.resolve('form')
+    l_thread = context.resolve('thread')
+    t_1 = environment.filters['safe']
+    if 0: yield None
+    yield u'\n  <h1>%s</h1>\n  <div>\n    <dl class="info">\n      <dt>Auther</dt><dd>%s</dd>\n      <dt>Created</dt><dd>%s</dd>\n    </dl>\n    <div class="text">%s</div>\n  </div>\n  ' % (
+        escape(environment.getattr(l_thread, 'title')), 
+        escape(environment.getattr(environment.getattr(l_thread, 'user'), 'user_name')), 
+        escape(context.call(environment.getattr(l_thread, 'view_datetime'), 'created')), 
+        escape(t_1(context.call(environment.getattr(l_thread, 'view_text')))), 
+    )
+    l_comment = missing
+    for l_comment in environment.getattr(l_thread, 'comments'):
+        if 0: yield None
+        yield u'\n    <div>\n      <dl class="info">\n        <dt>Auther</dt><dd>%s</dd>\n        <dt>Created</dt><dd>%s</dd>\n      </dl>\n      <div class="text">%s</div>\n  ' % (
+            escape(environment.getattr(environment.getattr(l_comment, 'user'), 'user_name')), 
+            escape(context.call(environment.getattr(l_comment, 'view_datetime'), 'created')), 
+            escape(t_1(context.call(environment.getattr(l_comment, 'view_text')))), 
+        )
+    l_comment = missing
+    yield u'\n  <div>\n    %s\n  </div>\n' % (
+        escape(t_1(context.call(l_form))), 
+    )
+
+def block_title(context, environment=environment):
+    l_thread = context.resolve('thread')
+    if 0: yield None
+    yield escape(environment.getattr(l_thread, 'title'))
+    yield u' - BBS Thread Page - app'
+
+blocks = {'content': block_content, 'title': block_title}
+debug_info = '1=8&3=14&4=20&7=21&8=22&10=23&12=26&15=29&16=30&18=31&19=34&21=35&2=38'

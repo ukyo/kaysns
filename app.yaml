@@ -1,4 +1,4 @@
-application: kaysns
+application: atnd-checker
 version: 1
 runtime: python
 api_version: 1
@@ -36,6 +36,7 @@ handlers:
 
 - url: /.*
   script: kay/main.py
+  secure: always
 
 skip_files: |
   ^(.*/)?(

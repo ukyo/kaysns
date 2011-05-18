@@ -1,0 +1,64 @@
+from __future__ import division
+from jinja2.runtime import LoopContext, TemplateReference, Macro, Markup, TemplateRuntimeError, missing, concat, escape, markup_join, unicode_join, to_string, TemplateNotFound
+name = '\\blog\\entry.html'
+
+def root(context, environment=environment):
+    parent_template = None
+    if 0: yield None
+    parent_template = environment.get_template('app/base.html', '\\blog\\entry.html')
+    for name, parent_block in parent_template.blocks.iteritems():
+        context.blocks.setdefault(name, []).append(parent_block)
+    for event in parent_template.root_render_func(context):
+        yield event
+
+def block_content(context, environment=environment):
+    l_entry = context.resolve('entry')
+    l_user_name = context.resolve('user_name')
+    l_form = context.resolve('form')
+    t_1 = environment.filters['safe']
+    if 0: yield None
+    yield u'\n  <h1><a href="/%s/blog">%s - Blog Page</a></h1>\n  <div class="blog-title">%s</div>\n  <div class="blog-created">%s</div>\n  <div class="blog-text">%s</div>\n  <div class="blog-tags">\n    Tags:\n    ' % (
+        escape(l_user_name), 
+        escape(l_user_name), 
+        escape(environment.getattr(l_entry, 'title')), 
+        escape(context.call(environment.getattr(l_entry, 'view_datetime'), 'created')), 
+        escape(t_1(context.call(environment.getattr(l_entry, 'view_text')))), 
+    )
+    l_tag = missing
+    for l_tag in environment.getattr(l_entry, 'tags'):
+        if 0: yield None
+        yield u'\n      <a href="/tag/%s">%s</a>\n    ' % (
+            escape(l_tag), 
+            escape(l_tag), 
+        )
+    l_tag = missing
+    yield u'\n  </div>\n  <div class="blog-comment">\n    <a href="/%s/blog/%s#comment">Comment(%s)</a>\n  </div>\n  <a name="comment"></a>\n  <div id="blog-entry-comments">\n    ' % (
+        escape(l_user_name), 
+        escape(context.call(environment.getattr(context.call(environment.getattr(l_entry, 'key')), 'id'))), 
+        escape(context.call(environment.getattr(environment.getattr(l_entry, 'comments'), 'count'))), 
+    )
+    l_comment = missing
+    for l_comment in environment.getattr(l_entry, 'comments'):
+        if 0: yield None
+        yield u'\n      <div class="blog-entry-comment">\n        <div class="blog-entry-comment-title">%s</div>\n        <div class="blog-entry-comment-created">%s</div>\n        <div class="blog-entry-comment-text">%s</div>\n        <div class="blog-entry-comment-author">by %s</div>\n      </div>\n    ' % (
+            escape(environment.getattr(l_comment, 'title')), 
+            escape(context.call(environment.getattr(l_comment, 'view_datetime'), 'created')), 
+            escape(t_1(context.call(environment.getattr(l_comment, 'view_text')))), 
+            escape(environment.getattr(l_comment, 'user')), 
+        )
+    l_comment = missing
+    yield u'\n  </div>\n  <div>\n    %s\n  </div>\n' % (
+        escape(t_1(context.call(l_form))), 
+    )
+
+def block_title(context, environment=environment):
+    l_entry = context.resolve('entry')
+    l_user_name = context.resolve('user_name')
+    if 0: yield None
+    yield u'%s - %s - Blog Page - app' % (
+        escape(environment.getattr(l_entry, 'title')), 
+        escape(l_user_name), 
+    )
+
+blocks = {'content': block_content, 'title': block_title}
+debug_info = '1=8&3=14&4=21&5=23&6=24&7=25&10=28&11=31&12=35&15=36&19=41&21=44&22=45&23=46&24=47&26=50&29=51&2=54'

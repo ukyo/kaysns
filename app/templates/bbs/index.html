@@ -5,13 +5,14 @@
     {{ form()|safe }}
   </div>
   <table>
-    <tr><th>Auther</th><th>Title</th><th>Updated</th><th>Created</th></tr>
+    <tr><th>Auther</th><th>Title</th><th>Reply</th><th>Updated</th><th>Created</th></tr>
     {% for thread in threads.object_list %}
       <tr>
         <td>{{ thread.user.user_name }}</td>
         <td><a href="/bbs/{{ thread.key().id() }}">{{ thread.title }}</a></td>
-        <td>{{ thread.updated }}</td>
-        <td>{{ thread.created }}</td>
+        <td>{{ thread.comments.count() }}</td>
+        <td>{{ thread.view_datetime('updated') }}</td>
+        <td>{{ thread.view_datetime('created') }}</td>
       </tr>
     {% endfor %}
   </table>

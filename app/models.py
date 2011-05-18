@@ -11,22 +11,27 @@ class MyUser(DatastoreUser):
     tags = db.StringListProperty()
     description = db.TextProperty()
     
-class BrMixin(object):
+class ViewMixin(object):
     def view_text(self):
         if self.newline_to_br:
             return self.text.replace('\r\n', '\n').replace('\n', '<br/>')
         else:
             return self.text
-            
-class Thread(db.Model, BrMixin):
+    
+    def view_datetime(self, attr_name):
+        attr = getattr(self, attr_name)
+        return attr.strftime('%Y/%m/%d %H:%M:%S')
+        
+        
+class Thread(db.Model, ViewMixin):
     user = kay.db.OwnerProperty()
     title = db.StringProperty(required=True)
     tags = db.StringListProperty()
     text = db.TextProperty(required=True)
-    newline_to_br = db.BooleanProperty()
+    newline_to_br = db.BooleanProperty(default=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
-class Comment(db.Model, BrMixin):
+class Comment(db.Model, ViewMixin):
     user = kay.db.OwnerProperty()
     title = db.StringProperty(required=True)
     text = db.TextProperty(required=True)
@@ -45,3 +50,7 @@ class BlogEntry(Thread):
 class BlogComment(Comment):
     entry = db.ReferenceProperty(BlogEntry, collection_name='comments')
     
+class Image(db.Model):
+    user = kay.db.OwnerProperty()
+    icon = db.BlobProperty()
+    background_image = db.BlobProperty()
