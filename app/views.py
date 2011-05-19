@@ -34,11 +34,11 @@ from kay.utils import (
     render_to_response, url_for, render_to_string
     )
 from app.models import (
-    MyUser, BbsThread, BbsComment, BlogEntry, Image
+    MyUser, BbsThread, BbsComment, BlogEntry, Icon
     )
 from app.forms import (
     UserForm, BbsThreadForm, BbsCommentForm, BlogEntryForm,
-    BlogCommentForm, ImageForm
+    BlogCommentForm, IconForm
     )
 from kay.auth.decorators import login_required, admin_required
 from kay.utils.paginator import Paginator, InvalidPage, EmptyPage
@@ -162,34 +162,19 @@ def blog_delete_entry(request, id):
     return redirect(url_for('app/blog/manage'))
     
     
-def setting_image(request):
-    form = ImageForm()
+def setting_icon(request):
+    form = IconForm()
     if request.method == 'POST':
         if form.validate(request.form, request.files):
-            image = Image.all().filter('user', request.user).get()
-            if image:
-                icon = request.files['icon'] or image.icon
-                background_image = request.files['background_image'] or image.background_image
-            else:
-                icon = None
-                background_image = None
-            form.save(icon=icon, background_image=background_image)
+            form.save()
             return redirect(url_for('app/index'))
-    return render_to_response('app/setting/image.html', {'form': form.as_widget()})
+    return render_to_response('app/setting/icon.html', {'form': form.as_widget()})
     
     
 def icon(request, user_name, width, height):
     user = MyUser.all().filter('user_name', user_name).get()
-    icon = Image.all().filter('user', user).get().icon
+    try:
+        icon = Icon.all().filter('user', user).get().image
+    except:
+        icon = open('default_user_icon.png').read()
     return Response(mimetype='image/png', response=images.resize(icon, width, height))
-    
-    
-def background_image(request, user_name):
-    user = MyUser.all().filter('user_name', user_name).get()
-    background_image = Image.all().filter('user', user).get().background_image
-    return Response(mimetype='image/png', response=images.rotate(background_image, 0))
-    
-@admin_required
-def admin_create_user(request, user_name, password, is_admin):
-    create_new_user(user_name, password, is_admin=bool(is_admin))
-    return Response(response='ok')

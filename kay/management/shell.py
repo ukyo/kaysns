@@ -78,7 +78,7 @@ def get_all_models_as_dict(only_polymodel_base=False):
 
 
 def auth_func():
-  return raw_input('Username:'), getpass.getpass('Password:')
+  return raw_input('Email:'), getpass.getpass('Password:')
 
 
 class JobManager(object):

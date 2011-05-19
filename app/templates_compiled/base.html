@@ -40,7 +40,7 @@ def block_menu(context, environment=environment):
     l_create_logout_url = context.resolve('create_logout_url')
     l_request = context.resolve('request')
     if 0: yield None
-    yield u'\n          <ul>\n            <li><a href="/">My Page</a>\n            <li><a href="/bbs">BBS</a>\n            <li>Blog\n              <ul>\n                <li><a href="/%s/blog">My Blog</a>\n                <li><a href="/blog/manage">Manage Entries</a>\n                <li><a href="/blog/create">Create a Entry</a>\n              </ul>\n            <li><a href="/uploader">Uploader</a>\n            <li>Setting\n              <ul>\n                <li><a href="/manage-profile">Profile</a>\n                <li><a href="/setting/image">Image</a>\n              </ul>\n            <li><a href="%s">logout</a>\n          </ul>\n        ' % (
+    yield u'\n          <ul>\n            <li><a href="/">My Page</a>\n            <li><a href="/bbs">BBS</a>\n            <li>Blog\n              <ul>\n                <li><a href="/%s/blog">My Blog</a>\n                <li><a href="/blog/manage">Manage Entries</a>\n                <li><a href="/blog/create">Create a Entry</a>\n              </ul>\n            <li><a href="/uploader">Uploader</a>\n            <li>Setting\n              <ul>\n                <li><a href="/manage-profile">Profile</a>\n                <li><a href="/setting/icon">Icon</a>\n              </ul>\n            <li><a href="%s">logout</a>\n          </ul>\n        ' % (
         escape(environment.getattr(l_request, 'user')), 
         escape(context.call(l_create_logout_url)), 
     )

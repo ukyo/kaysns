@@ -35,10 +35,8 @@ view_groups = [
     Rule('/blog/delete/<int:id>', endpoint='blog/delete', view='app.views.blog_delete_entry'),
     Rule('/<user_name>/blog', endpoint='blog/index', view='app.views.blog'),
     Rule('/<user_name>/blog/<int:id>', endpoint='blog/entry', view='app.views.blog_entry'),
-    Rule('/setting/image', endpoint='setting/image', view='app.views.setting_image'),
+    Rule('/setting/icon', endpoint='setting/icon', view='app.views.setting_icon'),
     Rule('/<user_name>/icon_<int:width>x<int:height>.png', endpoint='icon', view='app.views.icon'),
-    Rule('/<user_name>/background_image.png', endpoint='background_image', view='app.views.background_image'),
-    Rule('/admin/create_user/<user_name>/<password>/<int:is_admin>', endpoint='admin/create_user', view='app.views.admin_create_user'),
   )
 ]
 

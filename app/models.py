@@ -50,7 +50,6 @@ class BlogEntry(Thread):
 class BlogComment(Comment):
     entry = db.ReferenceProperty(BlogEntry, collection_name='comments')
     
-class Image(db.Model):
+class Icon(db.Model):
     user = kay.db.OwnerProperty()
-    icon = db.BlobProperty()
-    background_image = db.BlobProperty()
+    image = db.BlobProperty(required=True)
