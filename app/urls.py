@@ -37,6 +37,10 @@ view_groups = [
     Rule('/<user_name>/blog/<int:id>', endpoint='blog/entry', view='app.views.blog_entry'),
     Rule('/setting/icon', endpoint='setting/icon', view='app.views.setting_icon'),
     Rule('/<user_name>/icon_<int:width>x<int:height>.png', endpoint='icon', view='app.views.icon'),
+    Rule('/uploader', endpoint='uploader', view='app.views.uploader'),
+    Rule('/uploader/download/<int:id>/<filename>', endpoint='uploader/download', view='app.views.uploader_download'),
+    Rule('/uploader/delete/check/<int:id>', endpoint='uploader/delete/check', view='app.views.uploader_check_delete'),
+    Rule('/uploader/delete/<int:id>', endpoint='uploader/delete', view='app.views.uploader_delete'),
   )
 ]
 

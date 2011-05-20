@@ -34,11 +34,12 @@ from kay.utils import (
     render_to_response, url_for, render_to_string
     )
 from app.models import (
-    MyUser, BbsThread, BbsComment, BlogEntry, Icon
+    MyUser, BbsThread, BbsComment, BlogEntry, Icon,
+    File, Chunk
     )
 from app.forms import (
     UserForm, BbsThreadForm, BbsCommentForm, BlogEntryForm,
-    BlogCommentForm, IconForm
+    BlogCommentForm, IconForm, FileForm
     )
 from kay.auth.decorators import login_required, admin_required
 from kay.utils.paginator import Paginator, InvalidPage, EmptyPage
@@ -84,12 +85,13 @@ def manage_profile(request):
 
 def bbs(request):
     form = BbsThreadForm()
-    threads_all = BbsThread.all().order('-created')
-    threads = create_paginator_page(request, threads_all)
     if request.method == 'POST':
         if form.validate(request.form):
             form.save()
             return redirect(url_for('app/bbs/index'))
+            
+    threads_all = BbsThread.all().order('-created')
+    threads = create_paginator_page(request, threads_all)
     return render_to_response('app/bbs/index.html', {'form': form.as_widget(),
                                                      'threads': threads,
                                                      'paginator': render_paginator(threads)})
@@ -157,8 +159,9 @@ def blog_check_delete_entry(request, id):
     
 def blog_delete_entry(request, id):
     entry = BlogEntry.get_by_id(id)
-    db.delete(entry.comments)
-    db.delete(entry)
+    if request.user == entry.user:
+        db.delete(entry.comments)
+        db.delete(entry)
     return redirect(url_for('app/blog/manage'))
     
     
@@ -178,3 +181,43 @@ def icon(request, user_name, width, height):
     except:
         icon = open('default_user_icon.png').read()
     return Response(mimetype='image/png', response=images.resize(icon, width, height))
+    
+    
+def uploader(request):
+    form = FileForm()
+    if request.method == 'POST':
+        if form.validate(request.form, request.files):
+            file = File(comment=form['comment'],
+                        tags=form['tags'],
+                        name=request.files['file'].filename)
+            file.put()
+            data = form['file']
+            chunk_size = 1000000
+            for i in xrange(int(len(data)/chunk_size)+1):
+                chunk = Chunk(file=file, data=data[i*chunk_size:(i+1)*chunk_size], index=i)
+                chunk.put()
+            return redirect(url_for('app/uploader'))
+            
+    query = File.all().order('-created')
+    files = create_paginator_page(request, query)
+    return render_to_response('app/uploader/index.html', {'files': files,
+                                                    'paginator': render_paginator(files),
+                                                    'form': form.as_widget()})
+    
+    
+def uploader_download(request, id, filename):
+    file = File.get_by_id(id)
+    data = ''.join(chunk.data for chunk in file.chunks.order('index'))
+    return Response(mimetype='', response=data)
+    
+    
+def uploader_check_delete(request, id):
+    return render_to_response('app/uploader/delete.html', {'file': File.get_by_id(id)})
+    
+    
+def uploader_delete(request, id):
+    file = File.get_by_id(id)
+    if request.user == file.user:
+        db.delete(file.chunks)
+        db.delete(file)
+    return redirect(url_for('app/uploader'))

@@ -15,3 +15,8 @@ indexes:
   - name: user
   - name: created
     direction: desc
+
+- kind: app_chunk
+  properties:
+  - name: file
+  - name: index

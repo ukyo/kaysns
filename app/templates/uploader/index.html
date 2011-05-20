@@ -1,0 +1,39 @@
+{% extends "app/base.html" %}
+{% block title %}Uploader{% endblock %}
+{% block content %}
+  <h1>Uploader</h1>
+  <div>
+    {{ form()|safe }}
+  </div>
+  <table>
+    <tr>
+      <th>Filename</th>
+      <th>Comment</th>
+      <th>Author</th>
+      <th>Tags</th>
+      <th>Created</th>
+      <th>Delete</th>
+    </tr>
+    {% for file in files.object_list %}
+      <tr>
+        <td><a href="/uploader/download/{{ file.key().id() }}/{{ file.name }}">{{ file.name }}</a<</td>
+        <td>{{ file.comment }}</td>
+        <td>{{ file.user }}</td>
+        <td>
+          {% for tag in file.tags %}
+            <a href="/tag/{{ tag }}">{{ tag }}</a>
+          {% endfor %}
+        </td>
+        <td>{{ file.view_datetime('created') }}</td>
+        <td>
+          {% if request.user == file.user or request.user.is_admin %}
+            <a href="/uploader/delete/check/{{ file.key().id() }}">Delete</a>
+          {% else %}
+            -
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+  {{ paginator|safe }}
+{% endblock %}

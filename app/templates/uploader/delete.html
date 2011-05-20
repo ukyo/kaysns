@@ -1,0 +1,12 @@
+{% extends "app/base.html" %}
+{% block title %}Uploader/Delete{% endblock %}
+{% block content %}
+  <h1>Uploader/Delete</h1>
+  <div>
+    Do you delete the {{ file.name }}?
+    <ul>
+      <li><a href="/uploader/delete/{{ file.key().id() }}">Yes</a>
+      <li><a href="/uploader">No</a>
+    </ul>
+  </div>
+{% endblock %}

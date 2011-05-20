@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from kay.utils import forms
 from kay.utils.forms.modelform import ModelForm
 from app.models import (
     MyUser, BbsThread, BbsComment,
-    BlogEntry, BlogComment, Icon
+    BlogEntry, BlogComment, Icon,
 )
 
 class UserForm(ModelForm):
@@ -40,3 +41,10 @@ class IconForm(ModelForm):
     class Meta:
         model = Icon
         exclude = ('user', )
+        
+        
+class FileForm(forms.Form):
+    file = forms.FileField('File', required=True)
+    comment = forms.TextField('Comment')
+    tags = forms.LineSeparated(forms.TextField(), label='Tags')
+    
