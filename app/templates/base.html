@@ -7,38 +7,50 @@
     {% block head %}
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   	  <title>{% block title %}{% endblock %}</title>
+      {% block css %}
+        <link rel="stylesheet" media="screen" href="/media/css/base.css"/>
+      {% endblock %}
+      {% block js %}
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+        <script type="text/javascript" src="/media/js/jquery.droppy.js"></script>
+        <script>
+          $(function(){
+            $("#menu").droppy();
+          });
+        </script>
+      {% endblock %}
     {% endblock %}
   </head>
   <body>
     {% if request.user.is_anonymous() %}
       {{ render_loginbox() }}
     {% else %}
-      <div id="menu">
+    <div id="wrapper">
+      <ul id="menu">
         {% block menu %}
-          <ul>
-            <li><a href="/">My Page</a>
-            <li><a href="/bbs">BBS</a>
-            <li>Blog
-              <ul>
-                <li><a href="/{{ request.user }}/blog">My Blog</a>
-                <li><a href="/blog/manage">Manage Entries</a>
-                <li><a href="/blog/create">Create a Entry</a>
-              </ul>
-            <li><a href="/uploader">Uploader</a>
-            <li>Setting
-              <ul>
-                <li><a href="/manage-profile">Profile</a>
-                <li><a href="/setting/icon">Icon</a>
-              </ul>
-            <li><a href="{{ create_logout_url() }}">logout</a>
-          </ul>
+          <li><a href="/">My Page</a>
+          <li><a href="/bbs">BBS</a>
+          <li><a href="#">Blog</a>
+            <ul>
+              <li><a href="/{{ request.user }}/blog">My Blog</a>
+              <li><a href="/blog/manage">Manage Entries</a>
+              <li><a href="/blog/create">Create a Entry</a>
+            </ul>
+          <li><a href="/uploader">Uploader</a>
+          <li><a href="#">Setting</a>
+            <ul>
+              <li><a href="/manage-profile">Profile</a>
+              <li><a href="/setting/icon">Icon</a>
+            </ul>
+          <li><a href="{{ create_logout_url() }}">logout</a>
         {% endblock %}
-      </div>
+      </ul>
       <div id="content">
         {% block content %}
         
         {% endblock %}
       </div>
+    </div>
     {% endif %}
   </body>
 </html>

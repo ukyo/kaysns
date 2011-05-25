@@ -25,6 +25,8 @@ from kay.auth.decorators import login_required
 
 """
 
+import mimetypes
+    
 from google.appengine.ext import db
 from google.appengine.api import images
 
@@ -208,7 +210,7 @@ def uploader(request):
 def uploader_download(request, id, filename):
     file = File.get_by_id(id)
     data = ''.join(chunk.data for chunk in file.chunks.order('index'))
-    return Response(mimetype='', response=data)
+    return Response(mimetype=mimetypes.guess_type(file.name)[0], response=data)
     
     
 def uploader_check_delete(request, id):
@@ -217,7 +219,7 @@ def uploader_check_delete(request, id):
     
 def uploader_delete(request, id):
     file = File.get_by_id(id)
-    if request.user == file.user:
+    if request.user == file.user or request.user.id_admin:
         db.delete(file.chunks)
         db.delete(file)
     return redirect(url_for('app/uploader'))
