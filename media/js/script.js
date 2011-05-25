@@ -2,6 +2,7 @@
 // http://Framework.GregBabula.info
 // http://GregBabula.info/framework.php
 
+
 $(document).ready(function() {
 	
 	//Smooth Scroll To Top
